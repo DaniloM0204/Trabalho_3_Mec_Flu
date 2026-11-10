@@ -20,39 +20,39 @@ FoamFile
     {
         type            patch;
         nFaces          10;
-        startFace       65920;
+        startFace       19840;
     }
     dutoDireito
     {
         type            patch;
         nFaces          10;
-        startFace       65930;
+        startFace       19850;
     }
     paredes
     {
         type            wall;
         inGroups        List<word> 1(wall);
-        nFaces          542;
-        startFace       65940;
+        nFaces          322;
+        startFace       19860;
     }
     back
     {
         type            patch;
-        nFaces          6488;
-        startFace       66482;
+        nFaces          4646;
+        startFace       20182;
     }
     front
     {
         type            patch;
-        nFaces          6452;
-        startFace       72970;
+        nFaces          4631;
+        startFace       24828;
     }
     buildings
     {
         type            wall;
         inGroups        List<word> 1(wall);
-        nFaces          4544;
-        startFace       79422;
+        nFaces          1112;
+        startFace       29459;
     }
 )
 
