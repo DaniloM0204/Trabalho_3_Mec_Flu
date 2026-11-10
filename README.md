@@ -44,11 +44,11 @@ Com β = 1/288 K⁻¹, ΔT = 15 K e L = 1,4 m (altura do boneco), Ri = 1 corresp
 ## Andamento
 
 - [x] Malha de fundo (`blockMesh`): 3.600 células de 0,05 m, com `Mesh OK`
-- [ ] STL em metros e posicionado: escala e x já estão certos, mas falta encostar no chão (y mínimo ainda é 0,75 mm)
+- [x] STL em metros e posicionado: x de 1,100 a 1,900, y de 0 a 1,399 e z de 0 a 0,2, superfície fechada
 - [ ] `surfaceFeatures`, `snappyHexMesh` e `extrudeMesh` (malha 2D)
-- [ ] Definir as velocidades do estudo, cobrindo Ri ≫ 1, Ri ≈ 1 e Ri ≪ 1
-- [ ] Definir o modelo: RAS (`kEpsilon`) ou laminar. Com Re de 17 mil a 33 mil no duto, laminar só vale como hipótese justificada
+- [x] Velocidades do estudo: 0,1, 0,5, 0,75, 1, 1,5, 2 e 3 m/s (Ri de cerca de 72 até 0,08)
+- [x] Modelo de turbulência: RAS `kEpsilon`, como no tutorial `hotRoomBoussinesqSteady`
+- [ ] GCI com três malhas, só em U = 0,75 m/s (Ri ≈ 1); as demais velocidades usam a malha escolhida
 - [ ] Campos em `0/` e arquivos em `constant/`
 - [ ] Rodar, acompanhar resíduos e verificar convergência
-- [ ] Gerar três malhas e calcular o GCI
 - [ ] Escrever o relatório
