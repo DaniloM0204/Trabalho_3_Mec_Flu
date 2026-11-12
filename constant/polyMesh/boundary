@@ -14,38 +14,45 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-5
+6
 (
     dutoEsquerdo
     {
         type            patch;
         nFaces          10;
-        startFace       7080;
+        startFace       9105;
     }
     dutoDireito
     {
         type            patch;
         nFaces          10;
-        startFace       7090;
+        startFace       9115;
     }
     paredes
     {
         type            wall;
         inGroups        List<word> 1(wall);
-        nFaces          220;
-        startFace       7100;
+        nFaces          240;
+        startFace       9125;
     }
     back
     {
         type            empty;
-        nFaces          3600;
-        startFace       7320;
+        nFaces          4646;
+        startFace       9365;
     }
     front
     {
         type            empty;
-        nFaces          3600;
-        startFace       10920;
+        nFaces          4646;
+        startFace       14011;
+    }
+    boneco
+    {
+        type            wall;
+        inGroups        List<word> 1(wall);
+        nFaces          278;
+        startFace       18657;
     }
 )
 

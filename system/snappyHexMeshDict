@@ -22,18 +22,12 @@ addLayers       off;
 
 geometry
 {
-    buildings
+    boneco
     {
         type triSurface;
-        file "boneco";
+        file "boneco.stl";
     }
 
-    refinementBox
-    {
-        type box;
-        min  (  0   0   0);
-        max  (  2   2   1);
-    }
 };
 
 castellatedMeshControls
@@ -45,7 +39,7 @@ castellatedMeshControls
 
     refinementSurfaces
     {
-        buildings
+        boneco
         {
             level (2 2);
             patchInfo { type wall; }
@@ -61,8 +55,10 @@ castellatedMeshControls
         // }
     }
 
-    // Tem que ir de 0.075 a 0.125
-    insidePoint (1.5 0.7 0.1);
+    // x -> Tem que ir de 0 a 3
+    // y -> Tem que ir de 0 a 3
+    // z -> Tem que ir de 0.075 a 0.125
+    insidePoint (0.537 1.575 0.105); // Valores para não dar erro futuro no GCI
 }
 
 snapControls
