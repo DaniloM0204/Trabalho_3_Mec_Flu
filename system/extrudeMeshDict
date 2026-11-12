@@ -8,15 +8,22 @@
 FoamFile
 {
     format      ascii;
-    class       localUniformDimensionedScalarField;
-    location    "constant/polyMesh";
-    object      level0Edge;
+    class       dictionary;
+    location    "system";
+    object      extrudeMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 0 0 0 0 0];
-value           0.05;
+constructFrom patch;
+sourceCase "$FOAM_CASE";
 
+sourcePatches (back);
+exposedPatchName front;
 
+extrudeModel  plane;
+thickness     0.05;
+
+flipNormals false;
+mergeFaces false;
 
 // ************************************************************************* //

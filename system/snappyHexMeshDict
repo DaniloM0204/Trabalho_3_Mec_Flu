@@ -25,14 +25,14 @@ geometry
     buildings
     {
         type triSurface;
-        file "boneco.stl";
+        file "boneco";
     }
 
     refinementBox
     {
         type box;
         min  (  0   0   0);
-        max  (  3   3   1);
+        max  (  2   2   1);
     }
 };
 
@@ -40,7 +40,7 @@ castellatedMeshControls
 {
     features
     (
-      { file  "boneco.eMesh"; level 3; }
+      { file  "boneco.eMesh"; level 2; }
     );
 
     refinementSurfaces
@@ -61,7 +61,8 @@ castellatedMeshControls
         // }
     }
 
-    insidePoint (0 0 0.1);
+    // Tem que ir de 0.075 a 0.125
+    insidePoint (1.5 0.7 0.1);
 }
 
 snapControls
