@@ -16,40 +16,21 @@ FoamFile
 
 solvers
 {
-    "rho.*"
-    {
-        solver          PCG;
-        preconditioner  DIC;
-        tolerance       0;
-        relTol          0;
-    }
 
     p_rgh
     {
         solver          PCG;
         preconditioner  DIC;
-        tolerance       1e-8;
+        tolerance       1e-6;
         relTol          0.01;
     }
-
-    p_rghFinal
-    {
-        $p_rgh;
-        relTol          0;
-    }
-
-    "(U|h|e|k|epsilon|R)"
+    
+    "(U|h|k|epsilon)"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
         tolerance       1e-6;
         relTol          0.1;
-    }
-
-    "(U|h|e|k|epsilon|R)Final"
-    {
-        $U;
-        relTol          0;
     }
 }
 
@@ -59,7 +40,21 @@ PIMPLE
     nOuterCorrectors 1;
     nCorrectors     2;
     nNonOrthogonalCorrectors 0;
+    
 }
 
+relaxationFactors
+{
+    fields
+    {
+        p_rgh 0.3;
+    }
+    equations
+    {
+        U 0.7;
+        h 0.7;
+        "(k|epsilon|R)" 0.7;
+    }
+}
 
 // ************************************************************************* //
