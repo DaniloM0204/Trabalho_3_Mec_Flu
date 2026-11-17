@@ -20,20 +20,38 @@ internalField   uniform 0;
 
 boundaryField
 {
-    floor
+    paredes
     {
         type            nutkWallFunction;
         value           uniform 0;
     }
-    ceiling
+
+    boneco
     {
         type            nutkWallFunction;
         value           uniform 0;
     }
-    fixedWalls
+
+    dutoDireito
     {
-        type            nutkWallFunction;
+        type            calculated;
         value           uniform 0;
+    }
+
+    dutoEsquerdo
+    {
+        type            calculated;
+        value      uniform 0;
+    }
+
+    front
+    {
+        type            empty;
+    }
+
+    back
+    {
+        type            empty;
     }
 }
 

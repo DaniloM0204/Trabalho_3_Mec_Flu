@@ -20,23 +20,40 @@ internalField   uniform 0;
 
 boundaryField
 {
-    floor
+    paredes
     {
         type            compressible::alphatJayatillekeWallFunction;
         Prt             0.85;
         value           uniform 0;
     }
-    ceiling
+
+    boneco
     {
         type            compressible::alphatJayatillekeWallFunction;
         Prt             0.85;
         value           uniform 0;
     }
-    fixedWalls
+
+    dutoDireito
     {
-        type            compressible::alphatJayatillekeWallFunction;
-        Prt             0.85;
+        type            calculated;
         value           uniform 0;
+    }
+
+    dutoEsquerdo
+    {
+        type            calculated;
+        value      uniform 0;
+    }
+
+    front
+    {
+        type            empty;
+    }
+
+    back
+    {
+        type            empty;
     }
 }
 
