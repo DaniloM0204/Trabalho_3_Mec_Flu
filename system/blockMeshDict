@@ -5,6 +5,19 @@ FoamFile
     object      blockMeshDict;
 }
 
+
+// Constantes da sala
+
+P0 0; // Referencia do ponto 0
+
+L_x  3; // Comprimento da sala
+L_y  3; // Largura da sala
+L_z  0.05; // Altura da sala
+
+L_duto    0.5; // Comprimento do duto
+L_duto_y  0.5; // Largura do duto
+L_duto_z  0.05; // Altura do duto
+
 vertices
 (
        // Sala central

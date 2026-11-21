@@ -33,6 +33,12 @@ O STL original (`constant/geometry/boneco.STL`) está em mm e é binário com ca
 
 **Fluido:** ar.
 
+## Condições Alteradas
+
+| 0/Constant | S/alterar | Alteração |
+| --- | --- |
+| `p_rgh` | `fixedValuePressure -> $internalField` | `fixedValue -> uniform 0` |
+
 ## Estudo de velocidade
 
 O enunciado não fixa a velocidade de entrada, então ela será variada para observar o efeito no campo térmico. A escolha usa o número de Richardson, que compara empuxo e inércia:
