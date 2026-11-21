@@ -8,9 +8,9 @@
 Build  : 14-7b05503f98a8
 Exec   : blockMesh
 Date   : Nov 21 2026
-Time   : 09:49:30
+Time   : 11:05:52
 Host   : "NotebookdoDan"
-PID    : 20400
+PID    : 64594
 I/O    : uncollated
 Case   : /home/danil/OpenFOAM/danil-14/run/T3
 nProcs : 1
@@ -25,6 +25,76 @@ Reading "blockMeshDict"
 
 Creating block mesh from
     "system/blockMeshDict"
+Creating new library in "dynamicCode/_d7737e054c4954984555b7e41f97bc05d0d26932/platforms/linux64GccDPInt32Opt/lib/libcodeStream_d7737e054c4954984555b7e41f97bc05d0d26932.so"
+    Copying "/opt/openfoam14/etc/codeTemplates/dynamicCode/codeStreamTemplate.C" to "/home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_d7737e054c4954984555b7e41f97bc05d0d26932/codeStreamTemplate.C"
+wmake libso /home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_d7737e054c4954984555b7e41f97bc05d0d26932
+    ln: ./lnInclude
+    wmkdep: codeStreamTemplate.C
+    Ctoo: codeStreamTemplate.C
+    ld: /home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_d7737e054c4954984555b7e41f97bc05d0d26932/../platforms/linux64GccDPInt32Opt/lib/libcodeStream_d7737e054c4954984555b7e41f97bc05d0d26932.so
+Creating new library in "dynamicCode/_29e53b935b0e23630e1f3c9b84bf087ea8941ed1/platforms/linux64GccDPInt32Opt/lib/libcodeStream_29e53b935b0e23630e1f3c9b84bf087ea8941ed1.so"
+    Copying "/opt/openfoam14/etc/codeTemplates/dynamicCode/codeStreamTemplate.C" to "/home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_29e53b935b0e23630e1f3c9b84bf087ea8941ed1/codeStreamTemplate.C"
+wmake libso /home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_29e53b935b0e23630e1f3c9b84bf087ea8941ed1
+    ln: ./lnInclude
+    wmkdep: codeStreamTemplate.C
+    Ctoo: codeStreamTemplate.C
+    ld: /home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_29e53b935b0e23630e1f3c9b84bf087ea8941ed1/../platforms/linux64GccDPInt32Opt/lib/libcodeStream_29e53b935b0e23630e1f3c9b84bf087ea8941ed1.so
+Creating new library in "dynamicCode/_d648293868e326f6d3671727a78ec6cd489f599c/platforms/linux64GccDPInt32Opt/lib/libcodeStream_d648293868e326f6d3671727a78ec6cd489f599c.so"
+    Copying "/opt/openfoam14/etc/codeTemplates/dynamicCode/codeStreamTemplate.C" to "/home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_d648293868e326f6d3671727a78ec6cd489f599c/codeStreamTemplate.C"
+wmake libso /home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_d648293868e326f6d3671727a78ec6cd489f599c
+    ln: ./lnInclude
+    wmkdep: codeStreamTemplate.C
+    Ctoo: codeStreamTemplate.C
+    ld: /home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_d648293868e326f6d3671727a78ec6cd489f599c/../platforms/linux64GccDPInt32Opt/lib/libcodeStream_d648293868e326f6d3671727a78ec6cd489f599c.so
+Creating new library in "dynamicCode/_278f841a9d85715d728ee98dc11ca4d7db00beb4/platforms/linux64GccDPInt32Opt/lib/libcodeStream_278f841a9d85715d728ee98dc11ca4d7db00beb4.so"
+    Copying "/opt/openfoam14/etc/codeTemplates/dynamicCode/codeStreamTemplate.C" to "/home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_278f841a9d85715d728ee98dc11ca4d7db00beb4/codeStreamTemplate.C"
+wmake libso /home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_278f841a9d85715d728ee98dc11ca4d7db00beb4
+    ln: ./lnInclude
+    wmkdep: codeStreamTemplate.C
+    Ctoo: codeStreamTemplate.C
+    ld: /home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_278f841a9d85715d728ee98dc11ca4d7db00beb4/../platforms/linux64GccDPInt32Opt/lib/libcodeStream_278f841a9d85715d728ee98dc11ca4d7db00beb4.so
+Creating new library in "dynamicCode/_2c8afc2e74bbbe957c18a742fc3ce94be93d74c5/platforms/linux64GccDPInt32Opt/lib/libcodeStream_2c8afc2e74bbbe957c18a742fc3ce94be93d74c5.so"
+    Copying "/opt/openfoam14/etc/codeTemplates/dynamicCode/codeStreamTemplate.C" to "/home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_2c8afc2e74bbbe957c18a742fc3ce94be93d74c5/codeStreamTemplate.C"
+wmake libso /home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_2c8afc2e74bbbe957c18a742fc3ce94be93d74c5
+    ln: ./lnInclude
+    wmkdep: codeStreamTemplate.C
+    Ctoo: codeStreamTemplate.C
+    ld: /home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_2c8afc2e74bbbe957c18a742fc3ce94be93d74c5/../platforms/linux64GccDPInt32Opt/lib/libcodeStream_2c8afc2e74bbbe957c18a742fc3ce94be93d74c5.so
+Creating new library in "dynamicCode/_ca09f44650efef13594cc8dcc98350ac0ca8c189/platforms/linux64GccDPInt32Opt/lib/libcodeStream_ca09f44650efef13594cc8dcc98350ac0ca8c189.so"
+    Copying "/opt/openfoam14/etc/codeTemplates/dynamicCode/codeStreamTemplate.C" to "/home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_ca09f44650efef13594cc8dcc98350ac0ca8c189/codeStreamTemplate.C"
+wmake libso /home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_ca09f44650efef13594cc8dcc98350ac0ca8c189
+    ln: ./lnInclude
+    wmkdep: codeStreamTemplate.C
+    Ctoo: codeStreamTemplate.C
+    ld: /home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_ca09f44650efef13594cc8dcc98350ac0ca8c189/../platforms/linux64GccDPInt32Opt/lib/libcodeStream_ca09f44650efef13594cc8dcc98350ac0ca8c189.so
+Creating new library in "dynamicCode/_91fb7d4a67ae848d8991efd695fe1c4dd6bc8cbd/platforms/linux64GccDPInt32Opt/lib/libcodeStream_91fb7d4a67ae848d8991efd695fe1c4dd6bc8cbd.so"
+    Copying "/opt/openfoam14/etc/codeTemplates/dynamicCode/codeStreamTemplate.C" to "/home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_91fb7d4a67ae848d8991efd695fe1c4dd6bc8cbd/codeStreamTemplate.C"
+wmake libso /home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_91fb7d4a67ae848d8991efd695fe1c4dd6bc8cbd
+    ln: ./lnInclude
+    wmkdep: codeStreamTemplate.C
+    Ctoo: codeStreamTemplate.C
+    ld: /home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_91fb7d4a67ae848d8991efd695fe1c4dd6bc8cbd/../platforms/linux64GccDPInt32Opt/lib/libcodeStream_91fb7d4a67ae848d8991efd695fe1c4dd6bc8cbd.so
+Creating new library in "dynamicCode/_79984a380f9899edd1d4a284418d4f3908b1bbc7/platforms/linux64GccDPInt32Opt/lib/libcodeStream_79984a380f9899edd1d4a284418d4f3908b1bbc7.so"
+    Copying "/opt/openfoam14/etc/codeTemplates/dynamicCode/codeStreamTemplate.C" to "/home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_79984a380f9899edd1d4a284418d4f3908b1bbc7/codeStreamTemplate.C"
+wmake libso /home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_79984a380f9899edd1d4a284418d4f3908b1bbc7
+    ln: ./lnInclude
+    wmkdep: codeStreamTemplate.C
+    Ctoo: codeStreamTemplate.C
+    ld: /home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_79984a380f9899edd1d4a284418d4f3908b1bbc7/../platforms/linux64GccDPInt32Opt/lib/libcodeStream_79984a380f9899edd1d4a284418d4f3908b1bbc7.so
+Creating new library in "dynamicCode/_7cb667df12ce743610189de98082abeeb9e54c7b/platforms/linux64GccDPInt32Opt/lib/libcodeStream_7cb667df12ce743610189de98082abeeb9e54c7b.so"
+    Copying "/opt/openfoam14/etc/codeTemplates/dynamicCode/codeStreamTemplate.C" to "/home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_7cb667df12ce743610189de98082abeeb9e54c7b/codeStreamTemplate.C"
+wmake libso /home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_7cb667df12ce743610189de98082abeeb9e54c7b
+    ln: ./lnInclude
+    wmkdep: codeStreamTemplate.C
+    Ctoo: codeStreamTemplate.C
+    ld: /home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_7cb667df12ce743610189de98082abeeb9e54c7b/../platforms/linux64GccDPInt32Opt/lib/libcodeStream_7cb667df12ce743610189de98082abeeb9e54c7b.so
+Creating new library in "dynamicCode/_862aa9014a7d13f366433c1093f52a9f2b742de3/platforms/linux64GccDPInt32Opt/lib/libcodeStream_862aa9014a7d13f366433c1093f52a9f2b742de3.so"
+    Copying "/opt/openfoam14/etc/codeTemplates/dynamicCode/codeStreamTemplate.C" to "/home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_862aa9014a7d13f366433c1093f52a9f2b742de3/codeStreamTemplate.C"
+wmake libso /home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_862aa9014a7d13f366433c1093f52a9f2b742de3
+    ln: ./lnInclude
+    wmkdep: codeStreamTemplate.C
+    Ctoo: codeStreamTemplate.C
+    ld: /home/danil/OpenFOAM/danil-14/run/T3/dynamicCode/_862aa9014a7d13f366433c1093f52a9f2b742de3/../platforms/linux64GccDPInt32Opt/lib/libcodeStream_862aa9014a7d13f366433c1093f52a9f2b742de3.so
 No non-linear block edges defined
 No non-planar block faces defined
 Creating topology blocks

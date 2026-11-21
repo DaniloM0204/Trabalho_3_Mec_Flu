@@ -1,0 +1,3 @@
+SOURCE += codeStreamTemplate.C
+
+LIB = $(PWD)/../platforms/$(WM_OPTIONS)/lib/libcodeStream_29e53b935b0e23630e1f3c9b84bf087ea8941ed1
