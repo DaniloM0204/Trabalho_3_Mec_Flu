@@ -22,7 +22,7 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         5000;
+endTime         4000;
 
 deltaT          1;
 
@@ -50,7 +50,7 @@ maxCo           0.5;
 
 functions
 {
-    #includeFunc residuals(p_rgh, U, h, k, epsilon)
+    #includeFunc residuals(p_rgh, U, h, k, omega)
     #includeFunc patchFlowRate(patch=dutoEsquerdo, name=vazaoSaida)
     #includeFunc patchFlowRate(patch=dutoDireito, name=vazaoEntrada)
     #includeFunc volAverage(T)

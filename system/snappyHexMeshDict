@@ -18,7 +18,7 @@ FoamFile
 
 castellatedMesh on;
 snap            on;
-addLayers       off;
+addLayers       on;
 
 geometry
 {
@@ -71,16 +71,16 @@ addLayersControls
 {
     layers
     {
-        "CAD.*"
+        "boneco"
         {
-            nSurfaceLayers 2;
+            nSurfaceLayers 8;
         }
     }
 
-    relativeSizes       true;
+    relativeSizes       false;
     expansionRatio      1.2;
-    finalLayerThickness 0.5;
-    minThickness        1e-3;
+    firstLayerThickness 0.001;
+    minThickness        1e-4;
 }
 
 meshQualityControls

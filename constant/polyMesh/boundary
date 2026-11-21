@@ -20,46 +20,46 @@ FoamFile
     {
         type            patch;
         nFaces          10;
-        startFace       11005;
+        startFace       14785;
     }
     dutoDireito
     {
         type            patch;
         nFaces          10;
-        startFace       11015;
+        startFace       14795;
     }
     paredes
     {
         type            wall;
         inGroups        List<word> 1(wall);
         nFaces          240;
-        startFace       11025;
+        startFace       14805;
     }
     paredesDuto
     {
         type            wall;
         inGroups        List<word> 1(wall);
         nFaces          200;
-        startFace       11265;
+        startFace       15045;
     }
     back
     {
         type            empty;
-        nFaces          5646;
-        startFace       11465;
+        nFaces          7518;
+        startFace       15245;
     }
     front
     {
         type            empty;
-        nFaces          5646;
-        startFace       17111;
+        nFaces          7518;
+        startFace       22763;
     }
     boneco
     {
         type            wall;
         inGroups        List<word> 1(wall);
-        nFaces          278;
-        startFace       22757;
+        nFaces          276;
+        startFace       30281;
     }
 )
 

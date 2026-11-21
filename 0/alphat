@@ -20,26 +20,14 @@ internalField   uniform 0;
 
 boundaryField
 {
-    paredes
+    "(paredes|paredesDuto|boneco)"
     {
-        type            compressible::alphatJayatillekeWallFunction;
+        type            compressible::alphatWallFunction;
         Prt             0.85;
         value           uniform 0;
     }
 
-        paredesDuto
-    {
-        type            compressible::alphatJayatillekeWallFunction;
-        Prt             0.85;
-        value           uniform 0;
-    }
 
-    boneco
-    {
-        type            compressible::alphatJayatillekeWallFunction;
-        Prt             0.85;
-        value           uniform 0;
-    }
 
     dutoDireito
     {
@@ -53,15 +41,11 @@ boundaryField
         value      uniform 0;
     }
 
-    front
+    "(front|back)"
     {
         type            empty;
     }
 
-    back
-    {
-        type            empty;
-    }
 }
 
 

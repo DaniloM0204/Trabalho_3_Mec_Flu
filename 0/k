@@ -20,12 +20,7 @@ internalField   uniform 1.44e-3;
 
 boundaryField
 {
-    paredes
-    {
-        type            kqRWallFunction;
-        value           $internalField;
-    }
-        paredesDuto
+    "(paredes|paredesDuto|boneco)"
     {
         type            kqRWallFunction;
         value           $internalField;
@@ -42,23 +37,14 @@ boundaryField
     {
         type            inletOutlet;
         inletValue      $internalField;
-    }
-
-    boneco
-    {
-        type            kqRWallFunction;
         value           $internalField;
     }
 
-    front
+    "(front|back)"
     {
         type            empty;
     }
 
-    back
-    {
-        type            empty;
-    }
 }
 
 

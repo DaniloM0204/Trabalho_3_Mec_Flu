@@ -20,23 +20,12 @@ internalField   uniform 0;
 
 boundaryField
 {
-    paredes
+    "(paredes|paredesDuto|boneco)"
     {
-        type            nutkWallFunction;
+        type            nutUWallFunction;
         value           uniform 0;
     }
 
-        paredesDuto
-    {
-        type            nutkWallFunction;
-        value           uniform 0;
-    }
-
-    boneco
-    {
-        type            nutkWallFunction;
-        value           uniform 0;
-    }
 
     dutoDireito
     {
@@ -50,15 +39,11 @@ boundaryField
         value      uniform 0;
     }
 
-    front
+    "(front|back)"
     {
         type            empty;
     }
 
-    back
-    {
-        type            empty;
-    }
 }
 
 

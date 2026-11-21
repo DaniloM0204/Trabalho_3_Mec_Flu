@@ -50,24 +50,97 @@ def rodar_caso(caminho):
     """Executa o runAll.sh dentro da pasta do caso."""
     subprocess.run(["bash", "runAll.sh"], cwd=caminho, check=True)
 
-def ler_resultados(caminho):
-    """Retorna (N_celulas, Q_boneco, T_media) do caso."""
-    # TODO 1: N  -> linha "cells:" de Logs/log.checkMesh
-    # TODO 2: Q  -> última linha do patch "boneco" em postProcessing/wallHeatFlux/0/wallHeatFlux.dat (coluna Q [W])
-    # TODO 3: T  -> última linha de postProcessing/volAverage(T)/0/volFieldValue.dat
-    pass
+def ler_resultados(caminho, n_media=500):
+    """Retorna (N, Q_boneco, T_media), com Q e T = média das últimas n_media iterações."""
+
+    #* Ler o número de células do log.checkMesh
+    with open(os.path.join(caminho, "Logs", "log.checkMesh")) as f:
+        for l in f:
+            if l.strip().startswith("cells:"):
+                N = int(l.split()[1])
+                break
+
+    #* Ler o fluxo de calor no boneco: colunas = Time, patch, area, normalVector, wallHeatFlux
+    arq = os.path.join(caminho, "postProcessing", "wallHeatFlux", "0", "wallHeatFlux.dat")
+    with open(arq) as f:
+        dados = [l.split() for l in f if not l.startswith("#") and l.strip()]
+    q = [(float(d[0]), float(d[4])) for d in dados if d[1] == "boneco"]
+    t_final = q[-1][0]
+    Q = [v for t, v in q if t > t_final - n_media]
+
+
+    #* Ler a temperatura média: colunas = Time, volAverage(T)
+    arq = os.path.join(caminho, "postProcessing", "volAverage(T)", "0", "volFieldValue.dat")
+    with open(arq) as f:
+        dados = [l.split() for l in f if not l.startswith("#") and l.strip()]
+    T = [float(d[1]) for d in dados]
+
+    return N, np.mean(Q), np.mean(T)
 
 
 def gci(N, phi, A):
     """Celik et al. (2008). N e phi na ordem [fina, média, grossa]."""
     # TODO: h_i, r21, r32, eps21, eps32, s, p (iterativo), phi_ext, e_a21, GCI_fina
-    pass
+    N = np.array(N,float)
+    phi = np.array(phi,float)
+    
+    h_i = (A/N)**0.5
+    r21 = h_i[1]/h_i[0]
+    r32 = h_i[2]/h_i[1]
+    eps21 = (phi[1] - phi[0])
+    eps32 = (phi[2] - phi[1])
+    s = np.sign(eps32/eps21)
+
+    p = 1.0                                      # chute inicial
+    for _ in range(100):
+        q = np.log((r21**p - s) / (r32**p - s))
+        p_novo = abs(np.log(abs(eps32 / eps21)) + q) / np.log(r21)
+        if abs(p_novo - p) < 1e-8:
+            break
+        p = p_novo
+
+    phi_ext = phi[0] + (phi[0] - phi[1]) / (r21**p - 1)
+    e_a21 = abs((phi[0] - phi[1]))
+    e_a32 = abs((phi[1] - phi[2]))
+
+    GCI_21 = (1.25 * e_a21 / (r21**p - 1)) * 100
+    GCI_32 = (1.25 * e_a32 / (r32**p - 1)) * 100
+    
+    Rassint = GCI_32 / (r21**p * GCI_21)
+
+
+    return {
+        "p": p,
+        "phi_ext": phi_ext,
+        "e_a21": e_a21,
+        "GCI_21": GCI_21,
+        "GCI_32": GCI_32,
+        "Rassint": Rassint
+    }
+
+
+def ja_rodou(caminho):
+    """True se o foamRun desse caso já terminou."""
+    log = os.path.join(caminho, "Logs", "log.foamRun")
+    if not os.path.exists(log):
+        return False
+    with open(log) as f:
+        return "End" in f.read().split()[-3:]
 
 
 if __name__ == "__main__":
-    for i in range(len(DX)):
-        caminho = criar_caso(DX[i])
-        rodar_caso(caminho)
-
-    # TODO: chamar gci() para Q_boneco e para T_media e imprimir os resultados
+    N_lista, Q_lista, T_lista = [], [], []
+    for dx in DX:                          
+        caminho = criar_caso(dx)
+        if not ja_rodou(caminho):
+            rodar_caso(caminho)
+        N, Q, T = ler_resultados(caminho)
+        N_lista.append(N); Q_lista.append(Q); T_lista.append(T)
+    
+    T_lista = [T-288.15 for T in T_lista]
+    area  =  0.541869/0.05
+    res   =  gci(N_lista, Q_lista, area)            # GCI do calor no boneco
+    res_t =  gci(N_lista, T_lista, area)            # GCI da temperatura média
+    print("GCI do calor no boneco:", res)
+    print("GCI da temperatura média:", res_t)
     pass

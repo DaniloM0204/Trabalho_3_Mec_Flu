@@ -8,9 +8,9 @@
 Build  : 14-7b05503f98a8
 Exec   : extrudeMesh
 Date   : Nov 21 2026
-Time   : 11:06:04
+Time   : 11:52:31
 Host   : "NotebookdoDan"
-PID    : 66582
+PID    : 113994
 I/O    : uncollated
 Case   : /home/danil/OpenFOAM/danil-14/run/T3
 nProcs : 1
@@ -39,10 +39,10 @@ Merge distance    : 5e-06
 
 Collapsing edges < 5e-06 ...
 
-            Uncollapsed edges = 0 / 29584
-    Number of points : 12196
+            Uncollapsed edges = 0 / 39046
+    Number of points : 16008
     Not visited      : 0
-    Not collapsed    : 12196
+    Not collapsed    : 16008
     Collapsed        : 0
 
 Collapsing 0 cells
