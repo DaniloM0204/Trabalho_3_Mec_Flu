@@ -7,7 +7,6 @@ BASE   = os.getcwd()                       # pasta T3
 PASTA  = os.path.join(BASE, "GCI")         # Criacao das malhas
 DX     = [0.035, 0.05, 0.07]               # 1 = fina, 2 = média, 3 = grossa
 
-
 def criar_caso(dx):
     """Copia 0/, system/, constant/ (sem polyMesh) e runAll.sh para GCI/dx_<valor>
     e grava o blockMeshDict a partir do template. Retorna o caminho do caso."""
