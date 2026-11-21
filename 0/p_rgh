@@ -40,9 +40,8 @@ boundaryField
 
     dutoEsquerdo
     {
-        type            prghPressure;
-        p               $internalField;
-        value           $internalField;
+        type            fixedValue;
+        value           uniform 0;
     }
 
     dutoDireito
