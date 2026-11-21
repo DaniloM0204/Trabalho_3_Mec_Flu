@@ -16,7 +16,7 @@ L_duto_y  0.5;                      // altura dos dutos [m]
 L_duto    #calc "5*$L_duto_y";      // comprimento dos dutos = 5 * altura [m]
 
 // Tamanho de celula
-dx        0.05;     // parâmetro do GCI
+dx        @DX@;     // parâmetro do GCI
 
 // Espessura em z
 z_c       0.1;

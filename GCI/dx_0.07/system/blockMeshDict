@@ -1,0 +1,105 @@
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+
+// * * * * * * * * * * * * * * * Parâmetros * * * * * * * * * * * * * * * * //
+
+// Sala
+L_x       3;        // comprimento da sala em x [m]
+L_y       3;        // altura da sala em y [m]
+
+// Dutos
+L_duto_y  0.5;                      // altura dos dutos [m]
+L_duto    #calc "5*$L_duto_y";      // comprimento dos dutos = 5 * altura [m]
+
+// Tamanho de celula
+dx        0.07;     // parâmetro do GCI
+
+// Espessura em z
+z_c       0.1;
+L_z       $dx;
+z0        #calc "$z_c - 0.5*$L_z";
+z1        #calc "$z_c + 0.5*$L_z";
+
+// Coordenadas 
+y1        $L_duto_y;                        // topo do duto de saída
+y2        #calc "$L_y - $L_duto_y";         // base do duto de entrada
+xE        #calc "-$L_duto";                 // ponta do duto esquerdo
+xD        #calc "$L_x + $L_duto";           // ponta do duto direito
+
+// Número de celulas por bloco
+nx_sala   #calc "label(round($L_x / $dx))";
+nx_duto   #calc "label(round($L_duto / $dx))";
+ny_duto   #calc "label(round($L_duto_y / $dx))";
+ny_meio   #calc "label(round(($y2 - $y1) / $dx))";
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+vertices
+(
+    // Sala central
+    (0    0    $z0) ($L_x 0    $z0) ($L_x $y1 $z0) (0    $y1 $z0)  // 0, 1, 2, 3
+    (0    $y2  $z0) ($L_x $y2  $z0) ($L_x $L_y $z0) (0   $L_y $z0)  // 4, 5, 6, 7
+    (0    0    $z1) ($L_x 0    $z1) ($L_x $y1 $z1) (0    $y1 $z1)  // 8, 9, 10, 11
+    (0    $y2  $z1) ($L_x $y2  $z1) ($L_x $L_y $z1) (0   $L_y $z1)  // 12, 13, 14, 15
+
+    // Duto esquerdo
+    ($xE  0    $z0) ($xE  $y1  $z0) ($xE  0    $z1) ($xE  $y1  $z1)  // 16, 17, 18, 19
+
+    // Duto direito
+    ($xD  $y2  $z0) ($xD  $L_y $z0) ($xD  $y2  $z1) ($xD  $L_y $z1)  // 20, 21, 22, 23
+);
+
+blocks
+(
+    // Sala central
+    hex (0 1 2 3 8 9 10 11)     ($nx_sala $ny_duto 1) simpleGrading (1 1 1)
+    hex (3 2 5 4 11 10 13 12)   ($nx_sala $ny_meio 1) simpleGrading (1 1 1)
+    hex (4 5 6 7 12 13 14 15)   ($nx_sala $ny_duto 1) simpleGrading (1 1 1)
+
+    // Duto esquerdo
+    hex (16 0 3 17 18 8 11 19)  ($nx_duto $ny_duto 1) simpleGrading (1 1 1)
+
+    // Duto direito
+    hex (5 20 21 6 13 22 23 14) ($nx_duto $ny_duto 1) simpleGrading (1 1 1)
+);
+
+boundary
+(
+    dutoEsquerdo { type patch; faces ((16 18 19 17)); }
+    dutoDireito  { type patch; faces ((20 21 23 22)); }
+
+    paredes
+    {
+        type wall;
+        faces
+        (
+            (0 1 9 8)     // chão
+            (7 15 14 6)   // teto
+            (3 11 12 4)   // esquerda, acima do duto
+            (4 12 15 7)   // esquerda, trecho superior
+            (1 2 10 9)    // direita, trecho inferior
+            (2 5 13 10)   // direita, abaixo do duto
+        );
+    }
+
+    paredesDuto
+    {
+        type wall;
+        faces
+        (
+            (16 0 8 18)   // duto esquerdo, parede inferior
+            (17 19 11 3)  // duto esquerdo, parede superior
+            (5 13 22 20)  // duto direito, parede inferior
+            (6 21 23 14)  // duto direito, parede superior
+        );
+    }
+
+    back  { type patch; faces ((0 3 2 1) (3 4 5 2) (4 7 6 5) (16 17 3 0) (5 6 21 20)); }
+    front { type patch; faces ((8 9 10 11) (11 10 13 12) (12 13 14 15) (18 8 11 19) (13 22 23 14)); }
+);
+
+// ************************************************************************* //
