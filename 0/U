@@ -25,6 +25,11 @@ boundaryField
         type            noSlip;
     }
 
+    paredesDuto
+    {
+        type            noSlip;
+    }
+
     boneco
     {
         type            noSlip;

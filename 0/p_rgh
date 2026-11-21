@@ -26,6 +26,12 @@ boundaryField
         value           $internalField;
     }
 
+        paredesDuto
+    {
+        type            fixedFluxPressure;
+        value           $internalField;
+    }
+
     boneco
     {
         type            fixedFluxPressure;

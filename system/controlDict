@@ -22,13 +22,13 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         2000;
+endTime         3000;
 
 deltaT          1;
 
 writeControl    timeStep;
 
-writeInterval   50;
+writeInterval   25;
 
 purgeWrite      0;
 
@@ -47,6 +47,15 @@ runTimeModifiable true;
 adjustTimeStep  no;
 
 maxCo           0.5;
+
+functions
+{
+    #includeFunc residuals(p_rgh, U, h, k, epsilon)
+    #includeFunc patchFlowRate(patch=dutoEsquerdo, name=vazaoSaida)
+    #includeFunc patchFlowRate(patch=dutoDireito, name=vazaoEntrada)
+    #includeFunc volAverage(T)
+    #includeFunc wallHeatFlux
+}
 
 
 // ************************************************************************* //

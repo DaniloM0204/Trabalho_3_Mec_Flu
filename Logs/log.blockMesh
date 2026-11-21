@@ -1,0 +1,92 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  14
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+Build  : 14-7b05503f98a8
+Exec   : blockMesh
+Date   : Nov 21 2026
+Time   : 09:38:02
+Host   : "NotebookdoDan"
+PID    : 15277
+I/O    : uncollated
+Case   : /home/danil/OpenFOAM/danil-14/run/T3
+nProcs : 1
+sigFpe : Enabling floating point exception trapping (FOAM_SIGFPE).
+fileModificationChecking : Monitoring run-time modified files using timeStampMaster (fileModificationSkew 10)
+allowSystemOperations : Allowing user-supplied system call operations
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Create time
+
+Reading "blockMeshDict"
+
+Creating block mesh from
+    "system/blockMeshDict"
+No non-linear block edges defined
+No non-planar block faces defined
+Creating topology blocks
+Creating topology patches
+
+Creating block mesh topology
+
+Basic statistics
+    Number of internal faces : 4
+    Number of boundary faces : 22
+    Number of defined boundary faces : 22
+    Number of undefined boundary faces : 0
+
+Checking topology
+Creating block offsets
+Creating merge list .
+
+Creating polyMesh from blockMesh
+Creating patches
+Creating cells
+Creating points with scale 1
+    Block 0 cell size :
+        i : 0.05 .. 0.05
+        j : 0.05 .. 0.05
+        k : 0.05
+    Block 1 cell size :
+        i : 0.05 .. 0.05
+        j : 0.05 .. 0.05
+        k : 0.05
+    Block 2 cell size :
+        i : 0.05 .. 0.05
+        j : 0.05 .. 0.05
+        k : 0.05
+    Block 3 cell size :
+        i : 0.05 .. 0.05
+        j : 0.05 .. 0.05
+        k : 0.05
+    Block 4 cell size :
+        i : 0.05 .. 0.05
+        j : 0.05 .. 0.05
+        k : 0.05
+
+No patch pairs to merge
+
+Writing polyMesh
+----------------
+Mesh Information
+----------------
+  boundingBox: (-2.5 0 0.075) (5.5 3 0.125)
+  nPoints: 9642
+  nCells: 4600
+  nFaces: 18620
+  nInternalFaces: 8980
+----------------
+Patches
+----------------
+  patch 0 (start: 8980 size: 10) name: dutoEsquerdo
+  patch 1 (start: 8990 size: 10) name: dutoDireito
+  patch 2 (start: 9000 size: 220) name: paredes
+  patch 3 (start: 9220 size: 200) name: paredesDuto
+  patch 4 (start: 9420 size: 4600) name: back
+  patch 5 (start: 14020 size: 4600) name: front
+
+End
+

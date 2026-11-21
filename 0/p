@@ -26,6 +26,12 @@ boundaryField
         value           $internalField;
     }
 
+        paredesDuto
+    {
+        type            calculated;
+        value           $internalField;
+    }
+
     boneco
     {
         type            calculated;

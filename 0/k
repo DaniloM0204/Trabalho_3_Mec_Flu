@@ -25,6 +25,11 @@ boundaryField
         type            kqRWallFunction;
         value           $internalField;
     }
+        paredesDuto
+    {
+        type            kqRWallFunction;
+        value           $internalField;
+    }
 
     dutoDireito
     {

@@ -26,6 +26,12 @@ boundaryField
         value           $internalField;
     }
 
+        paredesDuto
+    {
+        type            epsilonWallFunction;
+        value           $internalField;
+    }
+
     boneco
     {
         type            epsilonWallFunction;

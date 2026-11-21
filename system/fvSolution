@@ -43,7 +43,7 @@ PIMPLE
 
     residualControl
 {
-    p_rgh 1e-2;
+    p_rgh 1e-3;
     U     1e-3;
     h     1e-3;
     "(k|epsilon|R)" 1e-3;

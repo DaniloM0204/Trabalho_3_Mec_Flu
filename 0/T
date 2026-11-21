@@ -26,6 +26,11 @@ boundaryField
         value           uniform 298.15;
     }
 
+        paredesDuto
+    {
+        type            zeroGradient;
+    }
+
     boneco
     {
         type            fixedValue;
