@@ -73,7 +73,8 @@ def ler_resultados(caminho, n_media=500):
     arq = os.path.join(caminho, "postProcessing", "volAverage(T)", "0", "volFieldValue.dat")
     with open(arq) as f:
         dados = [l.split() for l in f if not l.startswith("#") and l.strip()]
-    T = [float(d[1]) for d in dados]
+    t = [(float(d[0]), float(d[1])) for d in dados]
+    T = [v for tempo, v in t if tempo > t_final - n_media]
 
     return N, np.mean(Q), np.mean(T)
 
@@ -100,8 +101,9 @@ def gci(N, phi, A):
         p = p_novo
 
     phi_ext = phi[0] + (phi[0] - phi[1]) / (r21**p - 1)
-    e_a21 = abs((phi[0] - phi[1]))
-    e_a32 = abs((phi[1] - phi[2]))
+    e_a21 = abs((phi[0] - phi[1]) / phi[0])
+    e_a32 = abs((phi[1] - phi[2]) / phi[1])
+
 
     GCI_21 = (1.25 * e_a21 / (r21**p - 1)) * 100
     GCI_32 = (1.25 * e_a32 / (r32**p - 1)) * 100
@@ -131,8 +133,9 @@ def ja_rodou(caminho):
 if __name__ == "__main__":
     N_lista, Q_lista, T_lista = [], [], []
     for dx in DX:                          
-        caminho = criar_caso(dx)
+        caminho = os.path.join(PASTA, f"dx_{dx}")
         if not ja_rodou(caminho):
+            caminho = criar_caso(dx)
             rodar_caso(caminho)
         N, Q, T = ler_resultados(caminho)
         N_lista.append(N); Q_lista.append(Q); T_lista.append(T)
