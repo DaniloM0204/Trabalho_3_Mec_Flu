@@ -7,11 +7,10 @@ BASE   = os.getcwd()                       # pasta T3
 PASTA  = os.path.join(BASE, "GCI")         # Criacao das malhas
 DX     = [0.035, 0.05, 0.07]               # 1 = fina, 2 = média, 3 = grossa
 
-def criar_caso(dx):
+def criar_caso(dx,caminho):
     """Copia 0/, system/, constant/ (sem polyMesh) e runAll.sh para GCI/dx_<valor>
     e grava o blockMeshDict a partir do template. Retorna o caminho do caso."""
     #* Montagem do caminho do caso
-    caminho = os.path.join(PASTA, f"dx_{dx}")
 
     if os.path.exists(caminho):
         shutil.rmtree(caminho)
@@ -135,7 +134,7 @@ if __name__ == "__main__":
     for dx in DX:                          
         caminho = os.path.join(PASTA, f"dx_{dx}")
         if not ja_rodou(caminho):
-            caminho = criar_caso(dx)
+            caminho = criar_caso(dx,caminho)
             rodar_caso(caminho)
         N, Q, T = ler_resultados(caminho)
         N_lista.append(N); Q_lista.append(Q); T_lista.append(T)

@@ -1,6 +1,7 @@
 [1-9]*/
-!5000/
+!4000/
 postProcessing/
 Logs/
 GCI/
 constant/polyMesh/
+Velocidades/
