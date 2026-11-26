@@ -102,8 +102,26 @@ def fig_convergencia_Q(U):
 
 
 def fig_residuos(U, dx=0.035):
-    #TODO: resíduos de cada campo x iteração (escala log no eixo y: ax.set_yscale("log")).
-    pass
+    """Resíduo inicial de cada campo x iteração, para uma malha (padrão: fina)."""
+    caminho = caminho_caso(U, dx)
+    if not ja_rodou(caminho):
+        print(f"  [pulando] U = {U} m/s, malha {Nome_malha[dx]}: caso não terminou ainda")
+        return
+
+    fig, ax = plt.subplots(figsize=(7, 4))
+    for campo, (it, res) in residuos(caminho).items():    #* p_rgh, Ux, Uy, h, k, omega
+        ax.plot(it, res, label=campo, linewidth=0.8)
+
+    ax.set_xlabel("Iteração")
+    ax.set_ylabel("Resíduo inicial")
+    ax.set_yscale("log")
+    ax.set_title(f"Resíduos, U = {U} m/s, malha {Nome_malha[dx]} (dx = {dx} m)")
+    ax.grid(alpha=0.3, which="both")
+    ax.legend(ncol=3)
+    fig.tight_layout()
+    fig.savefig(os.path.join(Figs, f"residuos_U{U}.png"), dpi=200)
+    plt.close(fig)
+
 
 
 def fig_perfis_malhas(U, x_linha):
@@ -136,18 +154,59 @@ def fig_perfis_malhas(U, x_linha):
     ax_U.legend()
 
     fig.suptitle(f"Perfis de temperatura e velocidade, U = {U} m/s")
-    fig.savefig(os.path.join(Figs, f"perfis_U{U}.png"), dpi=200)
+    fig.savefig(os.path.join(Figs, f"perfis_U{U}_{x_linha}.png"), dpi=200)
+    plt.close(fig)
+
 
 def fig_gci_resumo():
-    #TODO: para cada grandeza (Q, dT_sala, dT_saida), o valor da malha fina x U,
-    # com barra de erro = GCI21_p1 (%) * valor / 100. Use ax.errorbar e ler_csv().
-    pass
+    d = ler_csv()
+    grandezas = ["Q", "dT_sala", "dT_saida"]
+    rotulo = ["Calor no boneco [W]", "dT da sala [K]", "dT da saída [K]"]
+
+    perm = d["U"] > 0.3   #* Regime permanente (U > 0.3 m/s)
+
+    fig, eixos = plt.subplots(3,1,sharex=True, figsize=(7, 8))
+    for ax, g, rotulo in zip(eixos, grandezas, rotulo):
+        erro = d[f"{g}_GCI21_p1"] / 100 * d[f"{g}_fina"]
+
+        x = d["U"][perm]
+        y = d[f"{g}_fina"][perm]
+        ax.errorbar(x, y, yerr=erro[perm], fmt="o-", label="Regime permanente", capsize=4)
+        ax.plot(d["U"][~perm], d[f"{g}_fina"][~perm],"o",mfc="none")
+        ax.set_xscale("log")
+        ax.set_ylabel(f"{rotulo}")
+        ax.grid(alpha=0.3)
+
+    eixos[-1].set_xlabel("U [m/s]")
+    fig.suptitle("GCI conservador p=1 malha fina")
+    eixos[-1].legend(labels=["Reg N Perm U=0.25 m/s"], loc="best")
+    fig.tight_layout()
+    fig.savefig(os.path.join(Figs, f"GCI_resumo.png"), dpi=200)
+    plt.close(fig)
+
 
 
 def fig_varredura():
-    #TODO: Q, dT_sala e dT_saida (malha fina) x Ri, com eixo x em escala log.
-    # Marque Ri = 1 com uma linha vertical (ax.axvline) para separar natural e forçada."""
-    pass
+    d = ler_csv()
+    grandezas = ["Q_fina", "dT_sala_fina", "dT_saida_fina",]
+    rotulo = ["Calor no boneco [W]", "dT da sala [K]", "dT da saída [K]"]
+    perm = d["U"] > 0.3
+
+    fig, eixos = plt.subplots(3,1,sharex=True, figsize=(7, 8))
+    for ax, g, rotulo in zip(eixos, grandezas, rotulo):
+        ax.plot(d["Ri"][perm], d[g][perm],"o-")
+        ax.plot(d["Ri"][~perm], d[g][~perm],"o",mfc="none")
+        ax.set_xscale("log")
+        ax.axvline(x=1, color="black", linestyle="--", alpha=0.5)
+        ax.set_ylabel(f"{rotulo}")
+        ax.grid(alpha=0.3)
+
+    eixos[-1].set_xlabel("(Ri)")
+    fig.suptitle("Efeito da velocidade (malha dx=0.035)")
+    eixos[-1].legend(labels=["Reg Perm", "Reg N Perm (U=0.25 m/s)"], loc="best")
+    fig.tight_layout()
+    fig.savefig(os.path.join(Figs, f"varredura.png"), dpi=200)
+    plt.close(fig)
 
 
 def fig_perfis_velocidades(x_linha, dx=0.035):
@@ -157,10 +216,15 @@ def fig_perfis_velocidades(x_linha, dx=0.035):
 
 
 if __name__ == "__main__":
-    U_var = [0.1, 0.5, 0.75, 1.5, 2.5, 5.0]
+    U_var = [0.25, 0.5, 0.75, 1.5, 2.5, 5.0]
 
     for U in U_var:
         fig_convergencia_Q(U)
-        fig_perfis_malhas(U, x_linha=1.5)
+        fig_perfis_malhas(U, 0.6)
+        fig_perfis_malhas(U, 2.4)
+        fig_residuos(U)
+
+    fig_varredura()
+    fig_gci_resumo()
 
     print(f"Figuras salvas em {Figs}")

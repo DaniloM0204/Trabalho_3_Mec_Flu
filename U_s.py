@@ -10,7 +10,7 @@ Area            = 0.541869/0.05                    # Area do dominio 2D (volume 
 T_in            = 288.15                           # Temperatura do ar na entrada [K]
 N_iter          = 10000                            # Iterações fixas
 N_guarda        = 20                               # Pastas para calular a media
-U_variacao      = [0.1,0.5,0.75,1.5,2.5,5.0]       # Velocidades a serem testadas
+U_variacao      = [0.25,0.5,0.75,1.5,2.5,5.0]       # Velocidades a serem testadas
 
 
 
