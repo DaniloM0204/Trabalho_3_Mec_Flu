@@ -11,11 +11,20 @@ Figs    = os.path.join(Base, "Figuras")
 CSV     = os.path.join(Base, "resultados_velocidades.csv")
 
 DX      = [0.035, 0.05, 0.07]
-Nome_malha    = {0.035: "fina", 0.05: "média", 0.07: "grossa"}
+Malha_N = {0.035: "fina", 0.05: "média", 0.07: "grossa"}
 T_Ein   = 288.15
 Z       = 0.05   # z dentro da camada 2D 
 
 os.makedirs(Figs, exist_ok=True)
+
+#* Subpastas de Figuras/
+Pasta_conv  = os.path.join(Figs, "1_Convergencia")       # Q x iteração
+Pasta_res   = os.path.join(Figs, "2_Residuos")           # resíduos x iteração
+Pasta_malha = os.path.join(Figs, "3_Independencia_Malha") # perfis por malha + GCI
+Pasta_varr  = os.path.join(Figs, "4_Varredura")          # resultados x Ri
+Pasta_campo = os.path.join(Figs, "5_Campos_ParaView")    # capturas do ParaView
+for p in [Pasta_conv, Pasta_res, Pasta_malha, Pasta_varr, Pasta_campo]:
+    os.makedirs(p, exist_ok=True)
 
 def caminho_caso(U, dx):
     return os.path.join(Pasta, f"U_{U}", f"dx_{dx}")
@@ -51,17 +60,17 @@ def residuos(caminho):
             for i, campo in enumerate(cabecalho)}
 
 
-def perfil(caminho, Nome_malha, inicio, fim, n_pontos=150):
+def perfil(caminho, Malha_N, inicio, fim, n_pontos=150):
     """Perfil de T e U ao longo de uma linha (função graphUniform do OpenFOAM).
     Roda o foamPostProcess só na primeira vez; depois apenas lê o arquivo.
     Devolve um dicionário com as colunas: distance, T, U_x, U_y, U_z."""
-    saida = glob.glob(os.path.join(caminho, "postProcessing", Nome_malha, "*", "line.xy"))
+    saida = glob.glob(os.path.join(caminho, "postProcessing", Malha_N, "*", "line.xy"))
     if not saida:
-        func = (f"graphUniform(name={Nome_malha}, start=({inicio[0]} {inicio[1]} {Z}), "
+        func = (f"graphUniform(name={Malha_N}, start=({inicio[0]} {inicio[1]} {Z}), "
                 f"end=({fim[0]} {fim[1]} {Z}), nPoints={n_pontos}, fields=(T U))")
         subprocess.run(["foamPostProcess", "-solver", "fluid", "-latestTime", "-func", func],
                        cwd=caminho, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        saida = glob.glob(os.path.join(caminho, "postProcessing", Nome_malha, "*", "line.xy"))
+        saida = glob.glob(os.path.join(caminho, "postProcessing", Malha_N, "*", "line.xy"))
     arquivo = sorted(saida, key=lambda p: float(p.split(os.sep)[-2]))[-1]
     with open(arquivo) as f:
         colunas = f.readline().split()[1:]
@@ -72,7 +81,7 @@ def perfil(caminho, Nome_malha, inicio, fim, n_pontos=150):
 def ler_csv():
     """Resultados da varredura: dicionário {coluna: array}, uma linha por velocidade."""
     dados = np.genfromtxt(CSV, delimiter=",", names=True)
-    return {Nome_malha: dados[Nome_malha] for Nome_malha in dados.dtype.names}
+    return {Malha_N: dados[Malha_N] for Malha_N in dados.dtype.names}
 
 
 #* Figura 1 do calor sob o boneco
@@ -88,7 +97,7 @@ def fig_convergencia_Q(U):
     fig, ax = plt.subplots(figsize=(7, 4))
     for dx in casos:
         it, Q = historico_Q(caminho_caso(U, dx))
-        ax.plot(it[1:], Q[1:], label=f"malha {Nome_malha[dx]} (dx = {dx} m)")   #* [1:] tira a iteração 0 (campo inicial)
+        ax.plot(it[1:], Q[1:], label=f"malha {Malha_N[dx]} (dx = {dx} m)")   #* [1:] tira a iteração 0 (campo inicial)
 
     ax.set_xlabel("Iteração")
     ax.set_ylabel("Q no boneco [W]")
@@ -97,7 +106,7 @@ def fig_convergencia_Q(U):
     ax.grid(alpha=0.3)
     ax.legend()
     fig.tight_layout()
-    fig.savefig(os.path.join(Figs, f"convergencia_Q_U{U}.png"), dpi=200)
+    fig.savefig(os.path.join(Pasta_conv, f"convergencia_Q_U{U}.png"), dpi=200)
     plt.close(fig)
 
 
@@ -105,7 +114,7 @@ def fig_residuos(U, dx=0.035):
     """Resíduo inicial de cada campo x iteração, para uma malha (padrão: fina)."""
     caminho = caminho_caso(U, dx)
     if not ja_rodou(caminho):
-        print(f"  [pulando] U = {U} m/s, malha {Nome_malha[dx]}: caso não terminou ainda")
+        print(f"  [pulando] U = {U} m/s, malha {Malha_N[dx]}: caso não terminou ainda")
         return
 
     fig, ax = plt.subplots(figsize=(7, 4))
@@ -115,11 +124,11 @@ def fig_residuos(U, dx=0.035):
     ax.set_xlabel("Iteração")
     ax.set_ylabel("Resíduo inicial")
     ax.set_yscale("log")
-    ax.set_title(f"Resíduos, U = {U} m/s, malha {Nome_malha[dx]} (dx = {dx} m)")
+    ax.set_title(f"Resíduos, U = {U} m/s, malha {Malha_N[dx]} (dx = {dx} m)")
     ax.grid(alpha=0.3, which="both")
     ax.legend(ncol=3)
     fig.tight_layout()
-    fig.savefig(os.path.join(Figs, f"residuos_U{U}.png"), dpi=200)
+    fig.savefig(os.path.join(Pasta_res, f"residuos_U{U}.png"), dpi=200)
     plt.close(fig)
 
 
@@ -134,8 +143,8 @@ def fig_perfis_malhas(U, x_linha):
         U_mod = np.sqrt(dados["U_x"]**2 + dados["U_y"]**2)
         y = dados["distance"]
 
-        ax_T.plot(T, y, label=f"malha {Nome_malha[dx]} (dx = {dx} m)")
-        ax_U.plot(U_mod, y, label=f"malha {Nome_malha[dx]} (dx = {dx} m)",
+        ax_T.plot(T, y, label=f"malha {Malha_N[dx]} (dx = {dx} m)")
+        ax_U.plot(U_mod, y, label=f"malha {Malha_N[dx]} (dx = {dx} m)",
                   linestyle="--")
 
     #~ Temperatura
@@ -154,7 +163,7 @@ def fig_perfis_malhas(U, x_linha):
     ax_U.legend()
 
     fig.suptitle(f"Perfis de temperatura e velocidade, U = {U} m/s")
-    fig.savefig(os.path.join(Figs, f"perfis_U{U}_{x_linha}.png"), dpi=200)
+    fig.savefig(os.path.join(Pasta_malha, f"perfis_U{U}_x{x_linha}.png"), dpi=200)
     plt.close(fig)
 
 
@@ -173,7 +182,6 @@ def fig_gci_resumo():
         y = d[f"{g}_fina"][perm]
         ax.errorbar(x, y, yerr=erro[perm], fmt="o-", label="Regime permanente", capsize=4)
         ax.plot(d["U"][~perm], d[f"{g}_fina"][~perm],"o",mfc="none")
-        ax.set_xscale("log")
         ax.set_ylabel(f"{rotulo}")
         ax.grid(alpha=0.3)
 
@@ -181,7 +189,7 @@ def fig_gci_resumo():
     fig.suptitle("GCI conservador p=1 malha fina")
     eixos[-1].legend(labels=["Reg N Perm U=0.25 m/s"], loc="best")
     fig.tight_layout()
-    fig.savefig(os.path.join(Figs, f"GCI_resumo.png"), dpi=200)
+    fig.savefig(os.path.join(Pasta_malha, "GCI_resumo.png"), dpi=200)
     plt.close(fig)
 
 
@@ -205,7 +213,7 @@ def fig_varredura():
     fig.suptitle("Efeito da velocidade (malha dx=0.035)")
     eixos[-1].legend(labels=["Reg Perm", "Reg N Perm (U=0.25 m/s)"], loc="best")
     fig.tight_layout()
-    fig.savefig(os.path.join(Figs, f"varredura.png"), dpi=200)
+    fig.savefig(os.path.join(Pasta_varr, "varredura.png"), dpi=200)
     plt.close(fig)
 
 

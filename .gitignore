@@ -1,7 +1,39 @@
-[1-9]*/
-!4000/
+# ============================================================
+#  T3 - o que NÃO vai para o git
+#  Sobem: 0/, constant/ (sem malha), system/, scripts .py,
+#  runAll.sh, resultados_velocidades.csv, Figuras/, Relatorio/, README
+# ============================================================
+
+# --- Resultados das simulações (gerados pelos scripts, ~4 GB) ---
+Velocidades/
+GCI/
 postProcessing/
 Logs/
-GCI/
+dynamicCode/
+/[0-9]*/
+!/0/
+processor*/
+
+# --- Malha e arquivos gerados pelo OpenFOAM ---
 constant/polyMesh/
-Velocidades/
+constant/extendedFeatureEdgeMesh/
+constant/geometry/*.eMesh
+*.foam
+log.*
+
+# --- Python ---
+__pycache__/
+*.pyc
+
+# --- LaTeX (arquivos auxiliares da compilação) ---
+Relatorio/*.aux
+Relatorio/*.log
+Relatorio/*.out
+Relatorio/*.toc
+Relatorio/*.synctex.gz
+Relatorio/*.fdb_latexmk
+Relatorio/*.fls
+
+# --- Material de apoio de terceiros (manuais) ---
+*.pdf
+!Relatorio/*.pdf
