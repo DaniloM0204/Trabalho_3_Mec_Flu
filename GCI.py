@@ -1,4 +1,5 @@
 import os
+import re
 import shutil
 import subprocess
 import numpy as np
@@ -127,6 +128,52 @@ def ja_rodou(caminho):
         return False
     with open(log) as f:
         return "End" in f.read().split()[-3:]
+
+
+def _lista_openfoam(texto, inicio):
+    """Lê uma lista do OpenFOAM no formato 'N ( v1 v2 ... )' a partir da posição inicio."""
+    m = re.compile(r"(\d+)\s*\(").search(texto, inicio)
+    n = int(m.group(1))
+    fim = texto.index(")", m.end())   #* lista curta pode vir na mesma linha: 10(a b ... j)
+    valores = np.array(texto[m.end():fim].split(), dtype=float)
+    assert len(valores) == n, f"esperava {n} valores, li {len(valores)}"
+    return valores
+
+
+def T_saida(caminho, patch="dutoEsquerdo", n_media=500):
+    """Temperatura média de saída ponderada pela vazão [K]:
+    T_saida = soma(phi_f * T_f) / soma(phi_f), nas faces do patch de saída.
+    Como T é zeroGradient na saída, T_f = T da célula vizinha à face.
+    Faz a média das pastas de tempo gravadas nas últimas n_media iterações."""
+
+    #* Faces do patch de saída e células vizinhas (owner)
+    with open(os.path.join(caminho, "constant", "polyMesh", "boundary")) as f:
+        b = f.read()
+    bloco = b[b.index(patch):]
+    inicio = int(re.search(r"startFace\s+(\d+)", bloco).group(1))
+    n_faces = int(re.search(r"nFaces\s+(\d+)", bloco).group(1))
+    with open(os.path.join(caminho, "constant", "polyMesh", "owner")) as f:
+        texto = f.read()
+    owner = _lista_openfoam(texto, texto.index("}") + 1).astype(int)
+    vizinhas = owner[inicio:inicio + n_faces]
+
+    #* Pastas de tempo dentro da janela de média
+    tempos = sorted((d for d in os.listdir(caminho) if d.isdigit() and d != "0"), key=int)
+    t_final = int(tempos[-1])
+    janela = [t for t in tempos if int(t) > t_final - n_media]
+
+    valores = []
+    for t in janela:
+        with open(os.path.join(caminho, t, "T")) as f:
+            texto = f.read()
+        T = _lista_openfoam(texto, texto.index("internalField"))
+        with open(os.path.join(caminho, t, "phi")) as f:
+            texto = f.read()
+        i = texto.index(patch, texto.index("boundaryField"))
+        phi = _lista_openfoam(texto, texto.index("value", i))
+        valores.append(np.sum(phi * T[vizinhas]) / np.sum(phi))
+
+    return np.mean(valores)
 
 
 if __name__ == "__main__":

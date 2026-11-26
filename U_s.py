@@ -1,14 +1,16 @@
 import os
 import subprocess
 import numpy as np
-from GCI import criar_caso, rodar_caso, ler_resultados, ja_rodou, gci
+from GCI import criar_caso, rodar_caso, ler_resultados, ja_rodou, gci, T_saida
 
-Base = os.getcwd() # Caminho do diretorio
-Pasta = os.path.join(Base,"Velocidades") # Criacao das malhas
-DX = [0.035, 0.05, 0.07] # Tamanho da celula: fina, media, grossa (ordem exigida pela gci)
-AREA = 0.541869/0.05 # Area do dominio 2D (volume / espessura do extrude) [m^2]
-T_ENTRADA = 288.15 # Temperatura do ar na entrada [K]
-U_variacao = [0.1,0.5,0.75,1.5,2.5,5.0] # Velocidades a serem testadas
+Base            =  os.getcwd()                     # Caminho do diretorio
+Pasta           = os.path.join(Base,"Velocidades") # Criacao das malhas
+DX              = [0.035, 0.05, 0.07]              # Tamanho da celula: fina, media, grossa (ordem exigida pela gci)
+Area            = 0.541869/0.05                    # Area do dominio 2D (volume / espessura do extrude) [m^2]
+T_in            = 288.15                           # Temperatura do ar na entrada [K]
+N_iter          = 10000                            # Iterações fixas
+N_guarda        = 20                               # Pastas para calular a media
+U_variacao      = [0.1,0.5,0.75,1.5,2.5,5.0]       # Velocidades a serem testadas
 
 
 
@@ -63,6 +65,22 @@ def ajusta_velocidade(caminho,U):
                     "-set",f"uniform ({-U} 0 0)", "0/U"]
                     ,cwd=caminho, check=True)
 
+    #~ Remove o residualControl para o solver não parar cedo
+    subprocess.run(["foamDictionary",
+                    "-entry", "PIMPLE/residualControl",
+                    "-remove", "system/fvSolution"],
+                   cwd=caminho, check=True)
+    subprocess.run(["foamDictionary",
+                    "-entry", "endTime",
+                    "-set", str(N_iter), "system/controlDict"],
+                   cwd=caminho, check=True)
+
+    #~ Mantém só as últimas pastas de tempo (economiza disco; bastam para a média)
+    subprocess.run(["foamDictionary",
+                    "-entry", "purgeWrite",
+                    "-set", str(N_guarda), "system/controlDict"],
+                   cwd=caminho, check=True)
+
 def gci_conservador(N, phi, p=1):
     """GCI da malha fina [%] com a ordem p fixada.
     N e phi na ordem [fina, media, grossa]."""
@@ -72,14 +90,14 @@ def gci_conservador(N, phi, p=1):
 
 
 if __name__ == "__main__":
+    grandezas = ["Q", "dT_sala", "dT_saida"]   #* calor no boneco [W], elevação média da sala [K], elevação na saída [K]
+    colunas   = ["fina", "media", "grossa", "s", "p", "ext", "GCI21", "GCI21_p1", "Rassint"]
+    cabecalho = ",".join(["U", "Ri", "N_fina"] + [f"{g}_{c}" for g in grandezas for c in colunas])
     resultados = []
-    cabecalho = ("U,Ri,N_fina,Q_fina,dT_fina,"
-                 "Q_media,Q_grossa,dT_media,dT_grossa,"
-                 "Q_s,Q_p,Q_ext,Q_GCI21,Q_GCI21_p1,Q_Rassint,"
-                 "dT_s,dT_p,dT_ext,dT_GCI21,dT_GCI21_p1,dT_Rassint")
 
     for U in U_variacao:
-        N_l, Q_l, dT_l = [], [], []   #* Zera as listas para cada velocidade
+        N_l = []
+        valores = {g: [] for g in grandezas}   #* zera as listas para cada velocidade
 
         #~ Roda (ou reaproveita) as 3 malhas desta velocidade
         for dx in DX:
@@ -89,27 +107,27 @@ if __name__ == "__main__":
                 ajusta_velocidade(caminho, U)
                 rodar_caso(caminho)
             N, Q, T = ler_resultados(caminho)
-            N_l.append(N); Q_l.append(Q); dT_l.append(T - T_ENTRADA)
+            N_l.append(N)
+            valores["Q"].append(Q)
+            valores["dT_sala"].append(T - T_in)
+            valores["dT_saida"].append(T_saida(caminho) - T_in)
 
-        #~ GCI desta velocidade
-        gQ  = gci(N_l, Q_l, AREA)
-        gdT = gci(N_l, dT_l, AREA)
-        sQ  = np.sign((Q_l[2] - Q_l[1]) / (Q_l[1] - Q_l[0]))      #* +1 monotona, -1 oscilatoria
-        sdT = np.sign((dT_l[2] - dT_l[1]) / (dT_l[1] - dT_l[0]))
+        Ri = 9.81 * (1/T_in) * 15 * 1.4 / U**2
+        linha = [U, Ri, N_l[0]]
 
-        Ri = 9.81 * (1/T_ENTRADA) * 15 * 1.4 / U**2
+        #~ GCI de cada grandeza desta velocidade
+        resumo = []
+        for g in grandezas:
+            v = valores[g]
+            r = gci(N_l, v, Area)
+            s = np.sign((v[2] - v[1]) / (v[1] - v[0]))   #* +1 monótona, -1 oscilatória
+            p1 = gci_conservador(N_l, v)
+            linha += [v[0], v[1], v[2], s, r["p"], r["phi_ext"], r["GCI_21"], p1, r["Rassint"]]
+            resumo.append(f"{g} = {[round(float(x), 3) for x in v]} (GCI21 p=1: {p1:.1f}%)")
 
-        resultados.append((U, Ri, N_l[0], Q_l[0], dT_l[0],
-                           Q_l[1], Q_l[2], dT_l[1], dT_l[2],
-                           sQ, gQ["p"], gQ["phi_ext"], gQ["GCI_21"],
-                           gci_conservador(N_l, Q_l), gQ["Rassint"],
-                           sdT, gdT["p"], gdT["phi_ext"], gdT["GCI_21"],
-                           gci_conservador(N_l, dT_l), gdT["Rassint"]))
+        resultados.append(linha)
+        print(f"U = {U} m/s (Ri = {Ri:.2f}): " + " | ".join(resumo))
 
-        print(f"U = {U} m/s (Ri = {Ri:.2f}): "
-              f"Q = {[round(float(x), 3) for x in Q_l]} W, GCI21 = {gQ['GCI_21']:.2f}% (p=1: {gci_conservador(N_l, Q_l):.2f}%) | "
-              f"dT = {[round(float(x), 3) for x in dT_l]} K, GCI21 = {gdT['GCI_21']:.2f}% (p=1: {gci_conservador(N_l, dT_l):.2f}%)")
-
-        #* Salva a cada velocidade: se algo falhar no meio, o que ja rodou fica gravado
+        #* Salva a cada velocidade: se algo falhar no meio, o que já rodou fica gravado
         np.savetxt("resultados_velocidades.csv", np.array(resultados, dtype=float),
                    delimiter=",", header=cabecalho, comments="")
